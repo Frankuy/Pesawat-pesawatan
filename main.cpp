@@ -18,10 +18,8 @@
 #include <GL/glut.h>
 #endif
 
+#include <stdio.h>
 #include <stdlib.h>
-#include <fstream>
-#include <iostream>
-#include <cstring>
 using namespace std;
 
 /** CUBE SHAPE VARIABLE **/
@@ -30,52 +28,21 @@ static float **sayap_bawah;
 
 static void readCube(char* filename, float** points_of_cube)
 {
-    ifstream cube_file(filename);
-    string line;
-    int i = 0;
-    int j = 0;
-    while (getline(cube_file, line)) {
-        int number = 0;
-        int comma_number = 0;
-        bool comma = false;
-        int jumlah_comma = 1;
-        bool negatif = false;
-        for (unsigned int idx = 0; idx < line.size(); idx++) {
-            if (line[idx] == '-') {
-                negatif = true;
-            }
-            else if (line[idx] == ' ') {
-                float result = number + (float)comma_number/jumlah_comma;
-                if (negatif) {
-                    result *= -1;
-                }
-                points_of_cube[i][j] = result;
-                comma = false;
-                negatif = false;
-                comma_number = 0;
-                number = 0;
-                jumlah_comma = 1;
-                j++;
-            }
-            else if (line[idx] == '.'){
-                comma = true;
-            }
-            else {
-                if (comma) {
-                    comma_number *= 10;
-                    comma_number += (float)((int)line[idx] - 48);
-                    jumlah_comma *= 10;
-                }
-                else {
-                    number *= 10;
-                    number += (float)((int)line[idx] - 48);
-                }
-            }
-        }
-        i++;
-        j = 0;
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        printf ("Error opening the file\n\n");
+        exit(EXIT_FAILURE);
     }
-    cube_file.close();
+    else {
+        int i = 0;
+        int status_file;
+        status_file = fscanf(file, "%f %f %f\n", &points_of_cube[i][0], &points_of_cube[i][1], &points_of_cube[i][2]);
+        while (status_file != EOF) {
+            i++;
+            status_file = fscanf(file, "%f %f %f\n", &points_of_cube[i][0], &points_of_cube[i][1], &points_of_cube[i][2]);
+        }
+    }
+    fclose(file);
 }
 
 static void drawCube(float **cube_points)
