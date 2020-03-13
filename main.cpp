@@ -18,6 +18,7 @@
 #include <GL/glut.h>
 #endif
 
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <cmath>
@@ -30,9 +31,9 @@ static float **sayap_bawah;
 // angle of rotation for the camera direction
 static float angle=0.0;
 // actual vector representing the camera's direction
-static float lx=0.0f,lz=-1.0f;
+static float lx=0.0f,lz=-1.0f,ly=0.0f;
 // XZ position of the camera
-static float x=0.0f,z=5.0f;
+static float x=0.0f,z=5.0f,y=1.0f;
 
 static void readCube(char* filename, float** points_of_cube)
 
@@ -126,9 +127,11 @@ static void display(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-    gluLookAt(	x, 1.0f, z,
-			x+lx, 1.0f,  z+lz,
+    gluLookAt(	x, y, z,
+			x+lx, y+ly,  z+lz,
 			0.0f, 1.0f,  0.0f);
+
+    // cout << x << y << z << endl;
 
     glColor3d(1,0,0);
 
@@ -155,7 +158,7 @@ static void processSpecialKeys(int key, int xx, int yy) {
 			lz = -cos(angle);
 			break;
 		case GLUT_KEY_UP :
-			x += lx * fraction;
+            x += lx * fraction;
 			z += lz * fraction;
 			break;
 		case GLUT_KEY_DOWN :
@@ -166,8 +169,29 @@ static void processSpecialKeys(int key, int xx, int yy) {
 }
 
 
-static void key(unsigned char key, int x, int y)
+static void key(unsigned char key, int xx, int yy)
 {
+
+    float fraction = 0.1f;
+
+	switch (key) {
+		case 'a' :
+			x -= lx * fraction;
+            z += (lz + 1) * fraction;
+			break;
+		case 'd' :
+			x += lx * fraction;
+            z -= (lz + 1) * fraction;
+			break;
+		case 'w' :
+			y += fraction;
+			
+			break;
+		case 's' :
+			y -= fraction;
+			
+			break;
+	}
     glutPostRedisplay();
 }
 
@@ -188,12 +212,12 @@ int main(int argc, char *argv[])
     for (int i = 0; i < 8; i++) {
         sayap_atas[i] = new float[3];
     }
-    readCube("..\\..\\sayap_atas.txt", sayap_atas);
+    readCube((char *)"..\\..\\sayap_atas.txt", sayap_atas);
     sayap_bawah = new float*[8];
     for (int i = 0; i < 8; i++) {
         sayap_bawah[i] = new float[3];
     }
-    readCube("..\\..\\sayap_bawah.txt", sayap_bawah);
+    readCube((char *)"..\\..\\sayap_bawah.txt", sayap_bawah);
 
     glutCreateWindow("Pesawat Tempur");
 
