@@ -20,13 +20,22 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <cmath>
 using namespace std;
 
 /** CUBE SHAPE VARIABLE **/
 static float **sayap_atas;
 static float **sayap_bawah;
 
+// angle of rotation for the camera direction
+static float angle=0.0;
+// actual vector representing the camera's direction
+static float lx=0.0f,lz=-1.0f;
+// XZ position of the camera
+static float x=0.0f,z=5.0f;
+
 static void readCube(char* filename, float** points_of_cube)
+
 {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
@@ -116,6 +125,11 @@ static void resize(int width, int height)
 static void display(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    gluLookAt(	x, 1.0f, z,
+			x+lx, 1.0f,  z+lz,
+			0.0f, 1.0f,  0.0f);
+
     glColor3d(1,0,0);
 
     // DRAWING PHASE
@@ -123,6 +137,32 @@ static void display(void)
     drawCube(sayap_bawah);
 
     glutSwapBuffers();
+}
+
+static void processSpecialKeys(int key, int xx, int yy) {
+
+	float fraction = 0.1f;
+
+	switch (key) {
+		case GLUT_KEY_LEFT :
+			angle -= 0.01f;
+			lx = sin(angle);
+			lz = -cos(angle);
+			break;
+		case GLUT_KEY_RIGHT :
+			angle += 0.01f;
+			lx = sin(angle);
+			lz = -cos(angle);
+			break;
+		case GLUT_KEY_UP :
+			x += lx * fraction;
+			z += lz * fraction;
+			break;
+		case GLUT_KEY_DOWN :
+			x -= lx * fraction;
+			z -= lz * fraction;
+			break;
+	}
 }
 
 
@@ -160,6 +200,7 @@ int main(int argc, char *argv[])
     glutReshapeFunc(resize);
     glutDisplayFunc(display);
     glutKeyboardFunc(key);
+    glutSpecialFunc(processSpecialKeys);
     glutIdleFunc(idle);
 
     glClearColor(0,0.7,1,1); // Background color
