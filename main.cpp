@@ -30,22 +30,23 @@ static float **sayap_bawah;
 static float **badan;
 static float **ekor_horizontal;
 static float **ekor_vertical;
+static float **penghubung_sayap_kiri;
+static float **penghubung_sayap_kanan;
 
 // angle of rotation for the camera direction
 static float angle=0.0;
 // actual vector representing the camera's direction
 static float lx=0.0f,lz=-1.0f,ly=0.0f;
 // XZ position of the camera
-static float x=0.0f,z=5.0f,y=1.0f;
+static float x=0.0f,z=15.0f,y=0.0f;
 
 static float ax=0.0f,ay=0.0f,az=0.0f;
 
 static void readCube(char* filename, float** points_of_cube)
-
 {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
-        printf ("Error opening the file\n\n");
+        printf ("Error opening the file %s\n\n", filename);
         exit(EXIT_FAILURE);
     }
     else {
@@ -62,55 +63,90 @@ static void readCube(char* filename, float** points_of_cube)
 
 static void drawCube(float **cube_points)
 {
+    glColor3f(cube_points[0][0], cube_points[0][1], cube_points[0][2]);
     /***    - BAGIAN DEPAN -    ***/
     glBegin(GL_POLYGON);
-        glVertex3f(cube_points[0][0], cube_points[0][1], cube_points[0][2]);
         glVertex3f(cube_points[1][0], cube_points[1][1], cube_points[1][2]);
         glVertex3f(cube_points[2][0], cube_points[2][1], cube_points[2][2]);
         glVertex3f(cube_points[3][0], cube_points[3][1], cube_points[3][2]);
+        glVertex3f(cube_points[4][0], cube_points[4][1], cube_points[4][2]);
     glEnd();
 
     /***    - BAGIAN BELAKANG -    ***/
     glBegin(GL_POLYGON);
+        glVertex3f(cube_points[8][0], cube_points[8][1], cube_points[8][2]);
         glVertex3f(cube_points[7][0], cube_points[7][1], cube_points[7][2]);
         glVertex3f(cube_points[6][0], cube_points[6][1], cube_points[6][2]);
         glVertex3f(cube_points[5][0], cube_points[5][1], cube_points[5][2]);
-        glVertex3f(cube_points[4][0], cube_points[4][1], cube_points[4][2]);
     glEnd();
 
     /***    - BAGIAN ATAS -    ***/
     glBegin(GL_POLYGON);
+        glVertex3f(cube_points[4][0], cube_points[4][1], cube_points[4][2]);
         glVertex3f(cube_points[3][0], cube_points[3][1], cube_points[3][2]);
-        glVertex3f(cube_points[2][0], cube_points[2][1], cube_points[2][2]);
-        glVertex3f(cube_points[6][0], cube_points[6][1], cube_points[6][2]);
         glVertex3f(cube_points[7][0], cube_points[7][1], cube_points[7][2]);
+        glVertex3f(cube_points[8][0], cube_points[8][1], cube_points[8][2]);
     glEnd();
 
     /***    - BAGIAN BAWAH -    ***/
     glBegin(GL_POLYGON);
+        glVertex3f(cube_points[2][0], cube_points[2][1], cube_points[2][2]);
         glVertex3f(cube_points[1][0], cube_points[1][1], cube_points[1][2]);
-        glVertex3f(cube_points[0][0], cube_points[0][1], cube_points[0][2]);
-        glVertex3f(cube_points[4][0], cube_points[4][1], cube_points[4][2]);
         glVertex3f(cube_points[5][0], cube_points[5][1], cube_points[5][2]);
+        glVertex3f(cube_points[6][0], cube_points[6][1], cube_points[6][2]);
     glEnd();
-
-
 
     /***    - BAGIAN KIRI -    ***/
     glBegin(GL_POLYGON);
-        glVertex3f(cube_points[3][0], cube_points[3][1], cube_points[3][2]);
-        glVertex3f(cube_points[2][0], cube_points[2][1], cube_points[2][2]);
-        glVertex3f(cube_points[7][0], cube_points[7][1], cube_points[7][2]);
+        glVertex3f(cube_points[1][0], cube_points[1][1], cube_points[1][2]);
         glVertex3f(cube_points[4][0], cube_points[4][1], cube_points[4][2]);
+        glVertex3f(cube_points[8][0], cube_points[8][1], cube_points[8][2]);
+        glVertex3f(cube_points[5][0], cube_points[5][1], cube_points[5][2]);
     glEnd();
 
 
     /***    - BAGIAN KANAN -    ***/
     glBegin(GL_POLYGON);
+        glVertex3f(cube_points[3][0], cube_points[3][1], cube_points[3][2]);
         glVertex3f(cube_points[2][0], cube_points[2][1], cube_points[2][2]);
-        glVertex3f(cube_points[1][0], cube_points[1][1], cube_points[1][2]);
-        glVertex3f(cube_points[5][0], cube_points[5][1], cube_points[5][2]);
         glVertex3f(cube_points[6][0], cube_points[6][1], cube_points[6][2]);
+        glVertex3f(cube_points[7][0], cube_points[7][1], cube_points[7][2]);
+    glEnd();
+}
+
+static void drawAxis(void)
+{
+    // X AXIS
+    glBegin(GL_LINES);
+        glVertex3f(-100.0, 0.0f, 0.0f);
+        glVertex3f(100.0, 0.0f, 0.0f);
+        // arrow
+        glVertex3f(100.0, 0.0f, 0.0f);
+        glVertex3f(99.0, 1.0f, 0.0f);
+        glVertex3f(100.0, 0.0f, 0.0f);
+        glVertex3f(99.0, -1.0f, 0.0f);
+    glEnd();
+
+    // Y AXIS
+    glBegin(GL_LINES);
+        glVertex3f(0.0, -100.0f, 0.0f);
+        glVertex3f(0.0, 100.0f, 0.0f);
+        // arrow
+        glVertex3f(0.0, 100.0f, 0.0f);
+        glVertex3f(1.0, 99.0f, 0.0f);
+        glVertex3f(0.0, 100.0f, 0.0f);
+        glVertex3f(-1.0, 9.0f, 0.0f);
+    glEnd();
+
+    // Z AXIS
+    glBegin(GL_LINES);
+        glVertex3f(0.0, 0.0f ,-100.0f );
+        glVertex3f(0.0, 0.0f ,100.0f );
+        // arrow
+        glVertex3f(0.0, 0.0f ,100.0f );
+        glVertex3f(0.0, 1.0f ,99.0f );
+        glVertex3f(0.0, 0.0f ,100.0f );
+        glVertex3f(0.0, -1.0f ,99.0f );
     glEnd();
 }
 
@@ -130,6 +166,8 @@ static void resize(int width, int height)
 
 static void display(void)
 {
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     gluLookAt(	x, y, z,
@@ -144,12 +182,17 @@ static void display(void)
 
     glColor3d(1,0,0);
 
+    // DRAWING COORDINATE (FOR DEBUGGING PROCESS ONLY)
+    // drawAxis();
+
     // DRAWING PHASE
+    drawCube(badan);
     drawCube(sayap_atas);
     drawCube(sayap_bawah);
-    drawCube(badan);
     drawCube(ekor_horizontal);
     drawCube(ekor_vertical);
+    drawCube(penghubung_sayap_kiri);
+    drawCube(penghubung_sayap_kanan);
 
     glutSwapBuffers();
 }
@@ -268,39 +311,56 @@ int main(int argc, char *argv[])
     glutInitWindowPosition(10,10);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 
-    sayap_atas = new float*[8];
-    for (int i = 0; i < 8; i++) {
+    // DEFINE SAYAP ATAS
+    sayap_atas = new float*[9];
+    for (int i = 0; i < 9; i++) {
         sayap_atas[i] = new float[3];
     }
-    readCube((char *)"..\\..\\sayap_atas.txt", sayap_atas);
-    sayap_bawah = new float*[8];
-    for (int i = 0; i < 8; i++) {
+    readCube((char *)"..\\..\\model\\sayap_atas.txt", sayap_atas);
+
+    // DEFINE SAYAP BAWAH
+    sayap_bawah = new float*[9];
+    for (int i = 0; i < 9; i++) {
         sayap_bawah[i] = new float[3];
     }
-    readCube((char *)"..\\..\\sayap_bawah.txt", sayap_bawah);
+    readCube((char *)"..\\..\\model\\sayap_bawah.txt", sayap_bawah);
 
-     //Define badan pesawat
-    badan = new float*[8];
-    for (int i = 0; i < 8; i++) {
+     // DEFINE BADAN PESAWAT
+    badan = new float*[9];
+    for (int i = 0; i < 9; i++) {
         badan[i] = new float[3];
     }
-    readCube("..\\..\\badan.txt", badan);
+    readCube("..\\..\\model\\badan.txt", badan);
 
-    //Define ekor horizontal pesawat
-    ekor_horizontal = new float*[8];
-    for (int i = 0; i < 8; i++) {
+    // DEFINE EKOR HORIZONTAL
+    ekor_horizontal = new float*[9];
+    for (int i = 0; i < 9; i++) {
         ekor_horizontal[i] = new float[3];
     }
-    readCube("..\\..\\ekor_horizontal.txt", ekor_horizontal);
+    readCube("..\\..\\model\\ekor_horizontal.txt", ekor_horizontal);
 
-    //Define ekor_vertical pesawat
-    ekor_vertical = new float*[8];
-    for (int i = 0; i < 8; i++) {
+    // DEFINE EKOR VERTIKAL
+    ekor_vertical = new float*[9];
+    for (int i = 0; i < 9; i++) {
         ekor_vertical[i] = new float[3];
     }
-    readCube("..\\..\\ekor_vertical.txt", ekor_vertical);
+    readCube("..\\..\\model\\ekor_vertical.txt", ekor_vertical);
 
     glutCreateWindow("Pesawat Tempur");
+
+    // DEFINE PENGHUBUNG SAYAP DAN BADAN KIRI
+    penghubung_sayap_kiri = new float*[9];
+    for (int i = 0; i < 9; i++) {
+        penghubung_sayap_kiri[i] = new float[3];
+    }
+    readCube("..\\..\\model\\penghubung_kiri.txt", penghubung_sayap_kiri);
+
+    // DEFINE PENGHUBUNG SAYAP DAN BADAN KANAN
+    penghubung_sayap_kanan = new float*[9];
+    for (int i = 0; i < 9; i++) {
+        penghubung_sayap_kanan[i] = new float[3];
+    }
+    readCube("..\\..\\model\\penghubung_kanan.txt", penghubung_sayap_kanan);
 
     glutReshapeFunc(resize);
     glutDisplayFunc(display);
