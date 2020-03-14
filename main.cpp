@@ -176,12 +176,12 @@ static void key(unsigned char key, int xx, int yy)
 
 	switch (key) {
 		case 'a' :
-			x -= lx * fraction;
-            z += (lz + 1) * fraction;
+			x += lz * fraction;
+            z -= lx * fraction;
 			break;
 		case 'd' :
-			x += lx * fraction;
-            z -= (lz + 1) * fraction;
+			x -= lz * fraction;
+            z += lx * fraction;
 			break;
 		case 'w' :
 			y += fraction;
