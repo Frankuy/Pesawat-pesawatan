@@ -27,6 +27,9 @@ using namespace std;
 /** CUBE SHAPE VARIABLE **/
 static float **sayap_atas;
 static float **sayap_bawah;
+static float **badan;
+static float **ekor_horizontal;
+static float **ekor_vertical;
 
 // angle of rotation for the camera direction
 static float angle=0.0;
@@ -144,6 +147,9 @@ static void display(void)
     // DRAWING PHASE
     drawCube(sayap_atas);
     drawCube(sayap_bawah);
+    drawCube(badan);
+    drawCube(ekor_horizontal);
+    drawCube(ekor_vertical);
 
     glutSwapBuffers();
 }
@@ -192,35 +198,35 @@ static void key(unsigned char key, int xx, int yy)
 			break;
 		case 'w' :
 			y += fraction;
-			
+
 			break;
 		case 's' :
 			y -= fraction;
-			
+
 			break;
         case 'i' :
 			ax = (float)(((int)ax + rotate_rate)%360);
-			
+
 			break;
         case 'j' :
 			ay = (float)(((int)ay - rotate_rate)%360);
-			
+
 			break;
         case 'k' :
 			ax = (float)(((int)ax - rotate_rate)%360);
-			
+
 			break;
         case 'l' :
 			ay = (float)(((int)ay + rotate_rate)%360);
-			
+
 			break;
         case 'u' :
 			az = (float)(((int)az + rotate_rate)%360);
-			
+
 			break;
         case 'o' :
 			az = (float)(((int)az - rotate_rate)%360);
-			
+
 			break;
 	}
     glutPostRedisplay();
@@ -249,6 +255,27 @@ int main(int argc, char *argv[])
         sayap_bawah[i] = new float[3];
     }
     readCube((char *)"..\\..\\sayap_bawah.txt", sayap_bawah);
+
+     //Define badan pesawat
+    badan = new float*[8];
+    for (int i = 0; i < 8; i++) {
+        badan[i] = new float[3];
+    }
+    readCube("..\\..\\badan.txt", badan);
+
+    //Define ekor horizontal pesawat
+    ekor_horizontal = new float*[8];
+    for (int i = 0; i < 8; i++) {
+        ekor_horizontal[i] = new float[3];
+    }
+    readCube("..\\..\\ekor_horizontal.txt", ekor_horizontal);
+
+    //Define ekor_vertical pesawat
+    ekor_vertical = new float*[8];
+    for (int i = 0; i < 8; i++) {
+        ekor_vertical[i] = new float[3];
+    }
+    readCube("..\\..\\ekor_vertical.txt", ekor_vertical);
 
     glutCreateWindow("Pesawat Tempur");
 
