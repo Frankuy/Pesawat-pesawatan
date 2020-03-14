@@ -232,6 +232,29 @@ static void key(unsigned char key, int xx, int yy)
     glutPostRedisplay();
 }
 
+static void helpMenu(void)
+{
+    printf("             HELP\n");
+    printf("-------------------------------\n");
+    printf("Camera control:\n");
+    printf("    \'w\' : Move up\n");
+    printf("    \'s\' : Move down\n");
+    printf("    \'a\' : Move left\n");
+    printf("    \'d\' : Move right\n");
+    printf("    arrow-up : Zoom in\n");
+    printf("    arrow-down : Zoom out\n");
+    printf("    arrow-left : Look left\n");
+    printf("    arrow-right : Look right\n\n");
+    printf("Object control:\n");
+    printf("    \'i\' : Rotate right on X axis\n");
+    printf("    \'k\' : Rotate left on X axis\n");
+    printf("    \'j\' : Rotate left on Y axis\n");
+    printf("    \'l\' : Rotate right on Y axis\n");
+    printf("    \'u\' : Rotate left on Z axis\n");
+    printf("    \'o\' : Rotate right on Z axis\n");
+}
+
+
 static void idle(void)
 {
     glutPostRedisplay();
@@ -284,6 +307,9 @@ int main(int argc, char *argv[])
     glutKeyboardFunc(key);
     glutSpecialFunc(processSpecialKeys);
     glutIdleFunc(idle);
+
+    // Help menu
+    helpMenu();
 
     glClearColor(0,0.7,1,1); // Background color
     glutMainLoop();

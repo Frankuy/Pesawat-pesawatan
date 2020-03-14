@@ -265,3 +265,11 @@
 1341006774 c:\program files (x86)\codeblocks\mingw\include\limits.h
 	<_mingw.h>
 
+1584177232 source:c:\users\ferdy\documents\itb jurusan if\tahun ketiga\semester 6\grafika komputer\pesawat-pesawatan\main.cpp
+	<GLUT/glut.h>
+	<GL/glut.h>
+	<iostream>
+	<stdio.h>
+	<stdlib.h>
+	<cmath>
+
