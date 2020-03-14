@@ -35,6 +35,8 @@ static float lx=0.0f,lz=-1.0f,ly=0.0f;
 // XZ position of the camera
 static float x=0.0f,z=5.0f,y=1.0f;
 
+static float ax=0.0f,ay=0.0f,az=0.0f;
+
 static void readCube(char* filename, float** points_of_cube)
 
 {
@@ -133,6 +135,10 @@ static void display(void)
 
     // cout << x << y << z << endl;
 
+    glRotatef(ay,0.0f,1.0f,0.0f);
+    glRotatef(ax,1.0f,0.0f,0.0f);
+    glRotatef(az,0.0f,0.0f,1.0f);
+
     glColor3d(1,0,0);
 
     // DRAWING PHASE
@@ -173,6 +179,7 @@ static void key(unsigned char key, int xx, int yy)
 {
 
     float fraction = 0.1f;
+    int rotate_rate = 1;
 
 	switch (key) {
 		case 'a' :
@@ -189,6 +196,30 @@ static void key(unsigned char key, int xx, int yy)
 			break;
 		case 's' :
 			y -= fraction;
+			
+			break;
+        case 'i' :
+			ax = (float)(((int)ax + rotate_rate)%360);
+			
+			break;
+        case 'j' :
+			ay = (float)(((int)ay - rotate_rate)%360);
+			
+			break;
+        case 'k' :
+			ax = (float)(((int)ax - rotate_rate)%360);
+			
+			break;
+        case 'l' :
+			ay = (float)(((int)ay + rotate_rate)%360);
+			
+			break;
+        case 'u' :
+			az = (float)(((int)az + rotate_rate)%360);
+			
+			break;
+        case 'o' :
+			az = (float)(((int)az - rotate_rate)%360);
 			
 			break;
 	}
