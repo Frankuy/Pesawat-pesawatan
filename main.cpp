@@ -42,6 +42,52 @@ static float x=0.0f,z=15.0f,y=0.0f;
 
 static float ax=0.0f,ay=0.0f,az=0.0f;
 
+const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
+const GLfloat light_diffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
+const GLfloat light_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+const GLfloat light_position[] = { 3.0f, 3.0f, 3.0f, 0.0f };
+
+const GLfloat no_mat[] = {0.0f, 0.0f, 0.0f, 1.0f};
+const GLfloat mat_ambient[] = {1.0f, 0.5f, 0.31f, 1.0f};
+const GLfloat mat_ambient_color[] = {0.8f, 0.8f, 0.2f, 1.0f};
+const GLfloat mat_diffuse[] = {1.0f, 0.5f, 0.31f, 1.0f};
+const GLfloat mat_specular[] = {0.5f, 0.5f, 0.5f, 1.0f};
+const GLfloat no_shininess = 0.0f;
+const GLfloat low_shininess = 5.0f;
+const GLfloat high_shininess = 100.0f;
+const GLfloat mat_emission[] = {0.3f, 0.2f, 0.2f, 0.0f};
+
+static float* calculate_normal(float* v1, float* v2, float *v3)
+{
+    // create vector v1 - v2
+    float* a = new float[3];
+    a[0] = v1[0] - v2[0]; //x
+    a[1] = v1[1] - v2[1]; //y
+    a[2] = v1[2] - v2[2]; //z
+
+    // create vector v2 - v3
+    float* b = new float[3];
+    b[0] = v2[0] - v3[0]; //x
+    b[1] = v2[1] - v3[1]; //y
+    b[2] = v2[2] - v3[2]; //z
+
+    float* normal = new float[3];
+    // calculate x component of normal vector
+    normal[0] = (a[1]*b[2]) - (a[2]*b[1]);
+    // calculate y component of normal vector
+    normal[1] = (a[2]*b[0]) - (a[0]*b[2]);
+    // calculate z component of normal vector
+    normal[2] = (a[0]*b[1]) - (a[1]*b[0]);
+
+    // normalize vector
+    float length = sqrt(normal[0]*normal[0] + normal[1]*normal[1] + normal[2]*normal[2]);
+    normal[0] = normal[0]/length;
+    normal[1] = normal[1]/length;
+    normal[2] = normal[2]/length;
+
+    return normal;
+}
+
 static void readCube(char* filename, float** points_of_cube)
 {
     FILE *file = fopen(filename, "r");
@@ -64,8 +110,11 @@ static void readCube(char* filename, float** points_of_cube)
 static void drawCube(float **cube_points)
 {
     glColor3f(cube_points[0][0], cube_points[0][1], cube_points[0][2]);
+    float* normal;
     /***    - BAGIAN DEPAN -    ***/
     glBegin(GL_POLYGON);
+        normal = calculate_normal(cube_points[1], cube_points[2], cube_points[3]);
+        glNormal3f(normal[0], normal[1], normal[2]);
         glVertex3f(cube_points[1][0], cube_points[1][1], cube_points[1][2]);
         glVertex3f(cube_points[2][0], cube_points[2][1], cube_points[2][2]);
         glVertex3f(cube_points[3][0], cube_points[3][1], cube_points[3][2]);
@@ -74,6 +123,8 @@ static void drawCube(float **cube_points)
 
     /***    - BAGIAN BELAKANG -    ***/
     glBegin(GL_POLYGON);
+        normal = calculate_normal(cube_points[8], cube_points[7], cube_points[6]);
+        glNormal3f(normal[0], normal[1], normal[2]);
         glVertex3f(cube_points[8][0], cube_points[8][1], cube_points[8][2]);
         glVertex3f(cube_points[7][0], cube_points[7][1], cube_points[7][2]);
         glVertex3f(cube_points[6][0], cube_points[6][1], cube_points[6][2]);
@@ -82,6 +133,8 @@ static void drawCube(float **cube_points)
 
     /***    - BAGIAN ATAS -    ***/
     glBegin(GL_POLYGON);
+        normal = calculate_normal(cube_points[4], cube_points[3], cube_points[7]);
+        glNormal3f(normal[0], normal[1], normal[2]);
         glVertex3f(cube_points[4][0], cube_points[4][1], cube_points[4][2]);
         glVertex3f(cube_points[3][0], cube_points[3][1], cube_points[3][2]);
         glVertex3f(cube_points[7][0], cube_points[7][1], cube_points[7][2]);
@@ -90,6 +143,8 @@ static void drawCube(float **cube_points)
 
     /***    - BAGIAN BAWAH -    ***/
     glBegin(GL_POLYGON);
+        normal = calculate_normal(cube_points[2], cube_points[1], cube_points[5]);
+        glNormal3f(normal[0], normal[1], normal[2]);
         glVertex3f(cube_points[2][0], cube_points[2][1], cube_points[2][2]);
         glVertex3f(cube_points[1][0], cube_points[1][1], cube_points[1][2]);
         glVertex3f(cube_points[5][0], cube_points[5][1], cube_points[5][2]);
@@ -98,6 +153,8 @@ static void drawCube(float **cube_points)
 
     /***    - BAGIAN KIRI -    ***/
     glBegin(GL_POLYGON);
+        normal = calculate_normal(cube_points[1], cube_points[4], cube_points[8]);
+        glNormal3f(normal[0], normal[1], normal[2]);
         glVertex3f(cube_points[1][0], cube_points[1][1], cube_points[1][2]);
         glVertex3f(cube_points[4][0], cube_points[4][1], cube_points[4][2]);
         glVertex3f(cube_points[8][0], cube_points[8][1], cube_points[8][2]);
@@ -107,6 +164,8 @@ static void drawCube(float **cube_points)
 
     /***    - BAGIAN KANAN -    ***/
     glBegin(GL_POLYGON);
+        normal = calculate_normal(cube_points[3], cube_points[2], cube_points[6]);
+        glNormal3f(normal[0], normal[1], normal[2]);
         glVertex3f(cube_points[3][0], cube_points[3][1], cube_points[3][2]);
         glVertex3f(cube_points[2][0], cube_points[2][1], cube_points[2][2]);
         glVertex3f(cube_points[6][0], cube_points[6][1], cube_points[6][2]);
@@ -370,6 +429,24 @@ int main(int argc, char *argv[])
 
     // Help menu
     helpMenu();
+
+    // Add lightning to model
+    if (argc == 1) {
+        glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHT0);
+        glEnable(GL_NORMALIZE);
+        glEnable(GL_COLOR_MATERIAL);
+
+        glLightfv(GL_LIGHT0, GL_AMBIENT,  light_ambient);
+        glLightfv(GL_LIGHT0, GL_DIFFUSE,  light_diffuse);
+        glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+        glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+        glMaterialfv(GL_FRONT, GL_AMBIENT,   mat_ambient);
+        glMaterialfv(GL_FRONT, GL_DIFFUSE,   mat_diffuse);
+        glMaterialfv(GL_FRONT, GL_SPECULAR,  mat_specular);
+        glMaterialf(GL_FRONT, GL_SHININESS, low_shininess);
+    }
 
     glClearColor(0,0.7,1,1); // Background color
     glutMainLoop();
