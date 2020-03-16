@@ -45,6 +45,11 @@ static float lx=0.0f,lz=-1.0f,ly=0.0f;
 // XZ position of the camera
 static float x=0.0f,z=15.0f,y=0.0f;
 
+// DEFAULT POSITION FOR CAMERA
+static float xdef=0.0f,zdef=15.0f,ydef=0.0f;
+// DEFAULT DIRECTION FOR CAMERA
+static float lxdef=0.0f,lzdef=-1.0f,lydef=0.0f;
+
 static float ax=0.0f,ay=0.0f,az=0.0f;
 
 const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
@@ -178,6 +183,7 @@ static void drawCube(float **cube_points)
     glEnd();
 }
 
+/**
 static void drawAxis(void)
 {
     // X AXIS
@@ -213,6 +219,7 @@ static void drawAxis(void)
         glVertex3f(0.0, -1.0f ,99.0f );
     glEnd();
 }
+**/
 
 /* GLUT callback Handlers */
 static void resize(int width, int height)
@@ -310,35 +317,33 @@ static void key(unsigned char key, int xx, int yy)
 			break;
 		case 'w' :
 			y += fraction;
-
 			break;
 		case 's' :
 			y -= fraction;
-
 			break;
         case 'i' :
 			ax = (float)(((int)ax + rotate_rate)%360);
-
 			break;
         case 'j' :
 			ay = (float)(((int)ay - rotate_rate)%360);
-
 			break;
         case 'k' :
 			ax = (float)(((int)ax - rotate_rate)%360);
-
 			break;
         case 'l' :
 			ay = (float)(((int)ay + rotate_rate)%360);
-
 			break;
         case 'u' :
 			az = (float)(((int)az + rotate_rate)%360);
-
 			break;
         case 'o' :
 			az = (float)(((int)az - rotate_rate)%360);
-
+			break;
+        case 'r' :
+            x = xdef; y = ydef; z = zdef;
+            lx = lxdef; ly = lydef; lz = lzdef;
+            angle = 0.0f;
+            ax = 0.0f; ay = 0.0f; az = 0.0f;
 			break;
 	}
     glutPostRedisplay();
@@ -363,7 +368,9 @@ static void helpMenu(void)
     printf("    \'j\' : Rotate left on Y axis\n");
     printf("    \'l\' : Rotate right on Y axis\n");
     printf("    \'u\' : Rotate left on Z axis\n");
-    printf("    \'o\' : Rotate right on Z axis\n");
+    printf("    \'o\' : Rotate right on Z axis\n\n");
+    printf("View:\n");
+    printf("    \'r\' : Reset view\n");
 }
 
 
@@ -443,28 +450,28 @@ int main(int argc, char *argv[])
     for (int i = 0; i < 9; i++) {
         baling_baling_2[i] = new float[3];
     }
-    readCube((char *)"./model/baling_baling_2.txt", baling_baling_2);
-    
+    readCube((char *)"..\\..\\model\\baling_baling_2.txt", baling_baling_2);
+
     // DEFINE BALING-BALING 3
     baling_baling_3 = new float*[9];
     for (int i = 0; i < 9; i++) {
         baling_baling_3[i] = new float[3];
     }
-    readCube((char *)"./model/baling_baling_3.txt", baling_baling_3);
-    
+    readCube((char *)"..\\..\\model\\baling_baling_3.txt", baling_baling_3);
+
     // DEFINE BALING-BALING 4
     baling_baling_4 = new float*[9];
     for (int i = 0; i < 9; i++) {
         baling_baling_4[i] = new float[3];
     }
-    readCube((char *)"./model/baling_baling_4.txt", baling_baling_4);
+    readCube((char *)"..\\..\\model\\baling_baling_4.txt", baling_baling_4);
 
     // DEFINE PENGHUBUNG BALING-BALING
     penghubung_baling_baling = new float*[9];
     for (int i = 0; i < 9; i++) {
         penghubung_baling_baling[i] = new float[3];
     }
-    readCube((char *)"./model/penghubung_baling_baling.txt", penghubung_baling_baling);
+    readCube((char *)"..\\..\\model\\penghubung_baling_baling.txt", penghubung_baling_baling);
 
     glutReshapeFunc(resize);
     glutDisplayFunc(display);
