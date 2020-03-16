@@ -32,6 +32,11 @@ static float **ekor_horizontal;
 static float **ekor_vertical;
 static float **penghubung_sayap_kiri;
 static float **penghubung_sayap_kanan;
+static float **baling_baling_1;
+static float **baling_baling_2;
+static float **baling_baling_3;
+static float **baling_baling_4;
+static float **penghubung_baling_baling;
 
 // angle of rotation for the camera direction
 static float angle=0.0;
@@ -252,6 +257,11 @@ static void display(void)
     drawCube(ekor_vertical);
     drawCube(penghubung_sayap_kiri);
     drawCube(penghubung_sayap_kanan);
+    drawCube(baling_baling_1);
+    drawCube(baling_baling_2);
+    drawCube(baling_baling_3);
+    drawCube(baling_baling_4);
+    drawCube(penghubung_baling_baling);
 
     glutSwapBuffers();
 }
@@ -389,21 +399,21 @@ int main(int argc, char *argv[])
     for (int i = 0; i < 9; i++) {
         badan[i] = new float[3];
     }
-    readCube("..\\..\\model\\badan.txt", badan);
+    readCube((char *)"..\\..\\model\\badan.txt", badan);
 
     // DEFINE EKOR HORIZONTAL
     ekor_horizontal = new float*[9];
     for (int i = 0; i < 9; i++) {
         ekor_horizontal[i] = new float[3];
     }
-    readCube("..\\..\\model\\ekor_horizontal.txt", ekor_horizontal);
+    readCube((char *)"..\\..\\model\\ekor_horizontal.txt", ekor_horizontal);
 
     // DEFINE EKOR VERTIKAL
     ekor_vertical = new float*[9];
     for (int i = 0; i < 9; i++) {
         ekor_vertical[i] = new float[3];
     }
-    readCube("..\\..\\model\\ekor_vertical.txt", ekor_vertical);
+    readCube((char *)"..\\..\\model\\ekor_vertical.txt", ekor_vertical);
 
     glutCreateWindow("Pesawat Tempur");
 
@@ -412,14 +422,49 @@ int main(int argc, char *argv[])
     for (int i = 0; i < 9; i++) {
         penghubung_sayap_kiri[i] = new float[3];
     }
-    readCube("..\\..\\model\\penghubung_kiri.txt", penghubung_sayap_kiri);
+    readCube((char *)"..\\..\\model\\penghubung_kiri.txt", penghubung_sayap_kiri);
 
     // DEFINE PENGHUBUNG SAYAP DAN BADAN KANAN
     penghubung_sayap_kanan = new float*[9];
     for (int i = 0; i < 9; i++) {
         penghubung_sayap_kanan[i] = new float[3];
     }
-    readCube("..\\..\\model\\penghubung_kanan.txt", penghubung_sayap_kanan);
+    readCube((char *)"..\\..\\model\\penghubung_kanan.txt", penghubung_sayap_kanan);
+
+    // DEFINE BALING-BALING 1
+    baling_baling_1 = new float*[9];
+    for (int i = 0; i < 9; i++) {
+        baling_baling_1[i] = new float[3];
+    }
+    readCube((char *)"..\\..\\model\\baling_baling_1.txt", baling_baling_1);
+
+    // DEFINE BALING-BALING 2
+    baling_baling_2 = new float*[9];
+    for (int i = 0; i < 9; i++) {
+        baling_baling_2[i] = new float[3];
+    }
+    readCube((char *)"./model/baling_baling_2.txt", baling_baling_2);
+    
+    // DEFINE BALING-BALING 3
+    baling_baling_3 = new float*[9];
+    for (int i = 0; i < 9; i++) {
+        baling_baling_3[i] = new float[3];
+    }
+    readCube((char *)"./model/baling_baling_3.txt", baling_baling_3);
+    
+    // DEFINE BALING-BALING 4
+    baling_baling_4 = new float*[9];
+    for (int i = 0; i < 9; i++) {
+        baling_baling_4[i] = new float[3];
+    }
+    readCube((char *)"./model/baling_baling_4.txt", baling_baling_4);
+
+    // DEFINE PENGHUBUNG BALING-BALING
+    penghubung_baling_baling = new float*[9];
+    for (int i = 0; i < 9; i++) {
+        penghubung_baling_baling[i] = new float[3];
+    }
+    readCube((char *)"./model/penghubung_baling_baling.txt", penghubung_baling_baling);
 
     glutReshapeFunc(resize);
     glutDisplayFunc(display);
